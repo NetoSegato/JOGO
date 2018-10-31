@@ -1,0 +1,564 @@
+import pygame,sys
+import random
+from pygame.locals import *
+import time
+
+LARGURA = 800
+ALTURA = 600
+pygame.init() #ESTANCIAÇÃO DO PYGAME
+tela = pygame.display.set_mode((LARGURA,ALTURA)) #DIMENÇÕES DA TELA
+clock= pygame.time.Clock() #CONTROLE DO TEMPO PARA ATUALIZAÇÃO DA TELA
+fundo=pygame.image.load("Imagens/Tabuleiro.png")#CHAMA A IMAGEM DA PASTA IMAGENS, PRESENTE NA BIBLIOTECA DO PYCHARM
+pygame.display.set_caption("CORRENDO CONTRA O TEMPO")#TITULO DO JOGO
+font= pygame.font.SysFont("arial",45)# CHAMA A FONTE PARA DENTRO DA TELA
+font2=pygame.font.SysFont('arial',30)# TIPO DIFERENTES DE FONTES USADAS NAS MENSAGENS
+font3=pygame.font.SysFont('arial',55)
+vermelho=(255,0,0)
+preto=(0,0,0)
+branco=(255,255,255)
+azul=(0,0,255)
+
+def comparar(): # AFASTA OD JOGADORES QUANDO ENTÃO NA MESMA CASA.
+  if jogador1.contador == jogador2.contador:
+      if jogador1.contador <=10:
+          jogador2.rect.x=jogador1.rect.x-30
+      elif jogador1.contador <=20:
+          jogador2.rect.y=jogador1.rect.y-25
+      elif jogador1.contador <=30:
+          jogador2.rect.x=jogador1.rect.x+30
+      elif jogador1.contador <40:
+          jogador2.rect.y=jogador1.rect.y+30
+
+class Bloco(pygame.sprite.Sprite):# CHAMA A FUNÇÃO BLOCO
+
+    def __init__(self,x,y,cor):
+        super().__init__()
+        self.image = pygame.Surface([20,20])
+        self.image.fill(cor)
+        self.rect = self.image.get_rect()
+        self.rect.x = x #POSIÇÃO INICIAL NO EIXO X
+        self.rect.y = y #POSIÇÃO INICIAL NO EIXO Y
+        self.contador = 0 # CONTADOR DE VALORES DO DADO
+        self.msg=''
+
+    def casa(self,dado): # FUNÇÃO DAS CASAS DE 1A 40.
+        global jogando
+        self.contador+=dado
+        i=0
+        while i < 3:
+            if self.contador == 1:
+                self.rect.x=70
+                self.rect.y=477
+                break
+
+            elif self.contador == 2:
+                self.rect.x= 70
+                self.rect.y= 429
+                break
+
+            elif self.contador == 3:
+                self.rect.x=70
+                self.rect.y=381
+                break
+
+            elif self.contador == 4:
+                self.rect.x=70
+                self.rect.y=333
+
+            elif self.contador == 5:
+                self.rect.x=70 # POSIÇÃO ATUAL DA CASA DE ACORDO COM O CONTADOR
+                self.rect.y=285 # POSIÇÃO ATUAL DA CASA DE ACORDO COM O CONTADOR
+                listaSprites.draw(tela)# CHAMA O JOGADOR NA POSIÇÃO
+                texto2 = font2.render('Pegou exame, volte ao início', True, vermelho)# MENSAGEM DA CASA EM QUE O JOGADOR SE ENCONTRA
+                tela.blit(fundo, [0, 0])#ATUALIZA O NOVO FUNDO PARA NAO DEIXAR RASTRO DA JOGADA ANTERIOR
+                listaSprites.draw(tela)#ATUALIZA A TELA
+                tela.blit(texto2, [155, 470])#PRINT DA MESNAGEM NA POSIÇÃO ESPECIFICA
+                pygame.display.update()#ATUALIZAÇÃO DE TELA
+                pygame.time.delay(2000)#TEMPO PARA APARECER A MENSAGEM
+                self.rect.y = 525 #POSIÇÃO FUTURA DE ONDE O JOGADOR IRÁ
+                self.rect.x = 70 #POSIÇÃO FUTURA DE ONDE O JOGADOR IRÁ
+                self.contador = 0 #RESETA O CONTADOR DO PLAYER
+                break
+
+
+            elif self.contador == 6:
+                self.rect.x = 70
+                self.rect.y =237
+                listaSprites.draw(tela)
+                texto2 = font2.render('Boas Notas, Avance 3 casas.', True, vermelho)
+                tela.blit(fundo, [0, 0])
+                listaSprites.draw(tela)
+                tela.blit(texto2, [155, 470])
+                pygame.display.update()
+                pygame.time.delay(2000)
+                self.rect.y -= 47.5*3
+                self.rect.x = 70
+                self.contador+=3
+                break
+
+            elif self.contador == 7:
+                self.rect.x=70
+                self.rect.y=189
+                break
+
+            elif self.contador == 8:
+                self.rect.x = 70
+                self.rect.y =141
+                listaSprites.draw(tela)
+                texto2 = font2.render('Ficou de exame, volte 4 casas', True, vermelho)
+                tela.blit(fundo, [0, 0])
+                listaSprites.draw(tela)
+                tela.blit(texto2, [155, 470])
+                pygame.display.update()
+                pygame.time.delay(2000)
+                self.rect.y = 525 - (47.5*4)
+                self.rect.x = 70
+                self.contador-= 4
+                break
+
+            elif self.contador == 9:
+                self.rect.x=70
+                self.rect.y=93
+                break
+
+            elif self.contador == 10:
+                self.rect.x = 70
+                self.rect.y = 45
+                listaSprites.draw(tela)
+                texto2 = font2.render('Resistiu ao semestre, avance 2 csasas', True, vermelho)
+                tela.blit(fundo, [0, 0])
+                listaSprites.draw(tela)
+                tela.blit(texto2, [155, 470])
+                pygame.display.update()
+                pygame.time.delay(2000)
+                self. rect.x = 70 + (65*2)
+                self.rect.y = 45
+                self.contador+=2
+
+            elif self.contador == 11:
+                self.rect.x= 135
+                self.rect.y = 45
+                break
+
+            elif self.contador == 12:
+                self.rect.x = 200
+                self.rect.y=45
+                listaSprites.draw(tela)
+                texto2 = font2.render('Novas Oportunidades, Avance 2 casas.', True, vermelho)
+                tela.blit(fundo, [0, 0])
+                listaSprites.draw(tela)
+                tela.blit(texto2, [155, 470])
+                pygame.display.update()
+                pygame.time.delay(2000)
+                self.rect.x = 70+(65*4)
+                self.rect.y = 45
+                self.contador+=2
+
+
+            elif self.contador == 13:
+                self.rect.x = 265
+                self.rect.y = 45
+                listaSprites.draw(tela)
+                texto2 = font2.render('Péssimas Notas, volte  2 casas', True, vermelho)
+                tela.blit(fundo, [0, 0])
+                listaSprites.draw(tela)
+                tela.blit(texto2, [155, 470])
+                pygame.display.update()
+                pygame.time.delay(2000)
+                self.rect.x = 70 + 65
+                self.rect.y = 45
+                self.contador-=2
+                break
+
+            elif self.contador == 14:
+                self.rect.x=330
+                self.rect.y= 45
+                break
+
+            elif self.contador == 15:
+                self.rect.x=395
+                self.rect.y=45
+                break
+
+            elif self.contador == 16:
+                self.rect.x = 460
+                self.rect.y = 45
+                listaSprites.draw(tela)
+                texto2 = font2.render('Trabalhos acumulados, Volte 2 casas', True, vermelho)
+                tela.blit(fundo, [0, 0])
+                listaSprites.draw(tela)
+                tela.blit(texto2, [155, 470])
+                pygame.display.update()
+                pygame.time.delay(2000)
+                self.rect.x= 70 + (65*4)
+                self.rect.y = 45
+                self.contador-=2
+                break
+
+            elif self.contador == 17:
+                self.rect.x = 525
+                self.rect.y = 45
+                listaSprites.draw(tela)
+                texto2 = font2.render('Estudo Regulares, avance 2 casas', True, vermelho)
+                tela.blit(fundo, [0, 0])
+                listaSprites.draw(tela)
+                tela.blit(texto2, [155, 470])
+                pygame.display.update()
+                pygame.time.delay(2000)
+                self.rect.x =70 + (65*9)
+                self.rect.y = 45
+                self.contador+=2
+                break
+
+            elif self.contador == 18:
+                self.rect.x = 590
+                self.rect.y = 45
+                listaSprites.draw(tela)
+                texto2 = font2.render('Está indo Muito Bem', True, vermelho)
+                comparar()
+                tela.blit(fundo, [0, 0])
+                listaSprites.draw(tela)
+                tela.blit(texto2, [155, 470])
+                pygame.display.update()
+                pygame.time.delay(2000)
+                self.rect.x+= 65
+                self.rect.y = 45
+                self.contador+=1
+                break
+
+            elif self.contador == 19:
+                self.rect.x=655
+                self.rect.y=45
+                break
+
+            elif self.contador == 20:
+                self.rect.x = 720
+                self.rect.y = 45
+                listaSprites.draw(tela)
+                texto2 = font2.render('Há Reclamações de você, volte 5 casas', True, vermelho)
+                tela.blit(fundo, [0, 0])
+                listaSprites.draw(tela)
+                tela.blit(texto2, [155, 470])
+                pygame.display.update()
+                pygame.time.delay(2000)
+                self.rect.x -= 65*5
+                self.rect.y = 45
+                self.contador-= 5
+                break
+
+            elif self.contador == 21:
+                self.rect.x = 720
+                self.rect.y = 94
+                listaSprites.draw(tela)
+                texto2 = font2.render('Está de DP, volte 1 casa', True, vermelho)
+                tela.blit(fundo, [0, 0])
+                listaSprites.draw(tela)
+                tela.blit(texto2, [155, 470])
+                pygame.display.update()
+                pygame.time.delay(2000)
+                self.rect.y -= 49
+                self.rect.x=720
+                self.contador-=1
+
+            elif self.contador == 22:
+                self.rect.x = 720
+                self.rect.y = 143
+                listaSprites.draw(tela)
+                texto2 = font2.render('Dia de sorte, avance 6 casas', True, vermelho)
+                tela.blit(fundo, [0, 0])
+                listaSprites.draw(tela)
+                tela.blit(texto2, [155, 470])
+                pygame.display.update()
+                pygame.time.delay(2000)
+                self.rect.y += 49*6
+                self.rect.x = 720
+                self.contador+=6
+
+            elif self.contador == 23:
+                self.rect.x = 720
+                self.rect.y = 192
+                listaSprites.draw(tela)
+                texto2 = font2.render('Esta indo bem, avance 3 casas', True, vermelho)
+                tela.blit(fundo, [0, 0])
+                listaSprites.draw(tela)
+                tela.blit(texto2, [155, 470])
+                pygame.display.update()
+                pygame.time.delay(2000)
+                self.rect.y+= 49*3
+                self.rect.x = 720
+                self.rect.x = 720
+                break
+
+            elif self.contador == 24:
+                self.rect.x=720
+                self.rect.y=241
+                break
+
+            elif self.contador == 25:
+                self.rect.x = 720
+                self.rect.y = 290
+                listaSprites.draw(tela)
+                texto2 = font2.render('Computador Estragado, volte 1 casa', True, vermelho)
+                tela.blit(fundo, [0, 0])
+                listaSprites.draw(tela)
+                tela.blit(texto2, [155, 470])
+                pygame.display.update()
+                pygame.time.delay(2000)
+                self.rect.y -= 49
+                self.rect.x = 720
+                self.contador-=1
+                break
+
+            elif self.contador == 26:
+                self.rect.x=720
+                self.rect.y=339
+                break
+
+            elif self.contador == 27:
+                self.rect.x = 720
+                self.rect.y = 388
+                listaSprites.draw(tela)
+                texto2 = font2.render('Dedique-se mais, volte 1 casas', True, vermelho)
+                tela.blit(fundo, [0, 0])
+                listaSprites.draw(tela)
+                tela.blit(texto2, [155, 470])
+                pygame.display.update()
+                pygame.time.delay(2000)
+                self.rect.y -= 49
+                self.rect.x = 720
+                self.contador-=1
+                break
+
+            elif self.contador == 28:
+                self.rect.x = 720
+                self.rect.y = 437
+                listaSprites.draw(tela)
+                texto2 = font2.render('Está com sorte, avançe 2 duas casas', True, vermelho)
+                tela.blit(fundo, [0, 0])
+                listaSprites.draw(tela)
+                tela.blit(texto2, [155, 470])
+                pygame.display.update()
+                pygame.time.delay(2000)
+                self.rect.y = 535
+                self.rect.x = 720
+                self.contador+=2
+                break
+
+            elif self.contador == 29:
+                self.rect.x = 720
+                self.rect.y = 486
+                listaSprites.draw(tela)
+                texto2 = font2.render('Reprovado no exame, volte 5 casas', True, vermelho)
+                tela.blit(fundo, [0, 0])
+                listaSprites.draw(tela)
+                tela.blit(texto2, [155, 470])
+                pygame.display.update()
+                pygame.time.delay(2000)
+                self.rect.y -= 49*5
+                self.rect.x = 720
+                self.contador-=5
+                break
+
+            elif self.contador == 30:
+                self.rect.x=720
+                self.rect.y=535
+                break
+
+            elif self.contador == 31:
+                self.rect.x = 655
+                self.rect.y = 535
+                listaSprites.draw(tela)
+                texto2 = font2.render('Esta Melhorando, ande 2 casa', True, vermelho)
+                tela.blit(fundo, [0, 0])
+                listaSprites.draw(tela)
+                tela.blit(texto2, [155, 470])
+                pygame.display.update()
+                pygame.time.delay(2000)
+                self.rect.x -= (65*2)
+                self.rect.y=535
+                self.contador+=2
+                break
+
+            elif self.contador == 32:
+                self.rect.x=590
+                self.rect.y=535
+                break
+
+            elif self.contador== 33:
+                self.rect.x=525
+                self.rect.y=535
+                break
+
+            elif self.contador == 34:
+                self.rect.x = 460
+                self.rect.y = 535
+                listaSprites.draw(tela)
+                texto2 = font2.render('Está Muito mal, volte 2 casas', True, vermelho)
+                tela.blit(fundo, [0, 0])
+                listaSprites.draw(tela)
+                tela.blit(texto2, [155, 470])
+                pygame.display.update()
+                pygame.time.delay(2000)
+                self.rect.x += 65*2
+                self.rect.y = 535
+                self.contador-=2
+                break
+
+            elif self.contador== 35:
+                self.rect.x=395
+                self.rect.y=535
+                break
+
+            elif self.contador == 36:
+                self.rect.x = 330
+                self.rect.y = 535
+                listaSprites.draw(tela)
+                texto2 = font2.render('Está de Exame, Prescisa de Media 4 pra passar.', True, vermelho)
+                tela.blit(fundo, [0, 0])
+                listaSprites.draw(tela)
+                tela.blit(texto2, [155, 470])
+                pygame.display.update()
+                pygame.time.delay(2000)
+                break
+
+
+            elif self.contador == 37:
+                self.rect.x = 265
+                self.rect.y = 535
+                listaSprites.draw(tela)
+                texto2 = font2.render('Está sem sorte, volte 1 casas', True, vermelho)
+                tela.blit(fundo, [0, 0])
+                listaSprites.draw(tela)
+                tela.blit(texto2, [155, 470])
+                pygame.display.update()
+                pygame.time.delay(2000)
+                self.rect.x = 135
+                self.rect.y = 535
+                self.contador-=1
+
+
+            elif self.contador == 38:
+                self.rect.x = 200
+                self.rect.y = 535
+                listaSprites.draw(tela)
+                texto2 = font2.render('Notas baixas,volte 2 casas', True, vermelho)
+                tela.blit(fundo, [0, 0])
+                listaSprites.draw(tela)
+                tela.blit(texto2, [155, 470])
+                pygame.display.update()
+                pygame.time.delay(2000)
+                self.rect.x = 135
+                self.rect.y = 535
+                self.contador-=2
+
+
+            elif self.contador == 39:
+                self.rect.x = 135
+                self.rect.y = 535
+                listaSprites.draw(tela)
+                texto2 = font2.render('Está de exame, volte 3 casas', True, vermelho)
+                tela.blit(fundo, [0, 0])
+                listaSprites.draw(tela)
+                tela.blit(texto2, [155, 470])
+                pygame.display.update()
+                pygame.time.delay(2000)
+                self.rect.x = 135
+                self.rect.y = 535
+                self.contador-=3
+
+            elif self.contador >= 40:
+                jogando=False
+                self.rect.x = 70
+                self.rect.y = 535
+                return jogando
+                break
+
+            i+=1
+
+msg=''
+vencedor=''
+listaSprites = pygame.sprite.Group()
+jogador1 = Bloco(70,525,azul)#POSICIONAMENTO INICIAL
+jogador2= Bloco (20,525,vermelho)#POSICIONAMENTO INICIAL
+listaSprites.add(jogador1)
+listaSprites.add(jogador2)
+jogando=True
+inicio=True
+vez=0
+dado=0
+
+while inicio:
+    tela.fill(branco)
+    textofinal = font3.render(str('CORRENDO CONTRA O TEMPO!'), True, preto)
+    textofinal2 = font2.render(str('Aperte Espaço para começar'), True, preto)
+    instrucoes= font2.render(str('OBSERVAÇÃO: Aperte S para Rodar o dado'),True,vermelho)
+    tela.blit(textofinal, [50, 100])
+    tela.blit(textofinal2, [240, 250])
+    tela.blit(instrucoes, [130,525])
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+        if event.type == pygame.KEYDOWN:
+           if event.key == pygame.K_SPACE:
+               inicio=False
+    pygame.display.update()
+
+while jogando:#LUPING INFINITO
+    for event in pygame.event.get(): # VERIFICA O FECHAMENTO DA JANELA
+          if event.type == pygame.QUIT:
+              pygame.quit()
+          if vez==0:
+              msg = 'Vez do Jogador 1'
+              vencedor='O Jogador 1 ganhou!!'
+          else:
+              msg = 'Vez do Jogador 2'
+              vencedor='O Jogador 2 ganhou!!'
+
+          if event.type == pygame.KEYDOWN:
+              if event.key == pygame.K_s:
+                 dado =random.randrange(1, 6)  # SORTEIA O DADO ENTRE 1 E 6
+                 if vez == 0:
+                     jogador1.casa(dado)
+                     vez=1
+                     comparar()
+                     print('Jogador 1',jogador1.contador,jogador1.rect.x, jogador1.rect.y)
+
+                 elif vez == 1:
+                     jogador2.casa(dado)
+                     vez=0
+                     comparar()
+                     print('Jogador 2',jogador2.contador, jogador2.rect.x, jogador2.rect.y)
+
+    listaSprites.draw(tela)  # CHAMA O LOCALIZADOR DENTRO DA TELA
+    texto1 = font.render(str(dado), True, vermelho)# CONVERTE OS VALORES RECEBIDOS PELO DADO EM STR DA COR VERMELHO
+    texto2 = font.render(str(msg), True, vermelho)#MENSAGEM DAS CASAS
+    tela.blit(fundo, [0, 0])# ABRE A IMAGEM DE FUNDO NA POSIÇÃO 0,0
+    listaSprites.draw(tela)
+    tela.blit(texto1, [380, 280])#LOCALIZAÇÃO OS VALORES RECEBIDOS PELO DADO
+    tela.blit(texto2, [250, 150])#LOCALIZAÇÃO DAS MENSAGENS
+    pygame.display.update()
+
+while jogando == False: #PARA DE RODAS A TELA DO JOGO E ABRE A TELA DE FINAL
+      tela.fill(branco)
+      textofinal = font3.render(str('Parabéns!!'), True, vermelho)#PARABENIZAÇÃO DO VENCEDOR
+      textofinal2 = font3.render(str(vencedor), True, vermelho)
+      final=font.render(str('Para sair Aperte ESC.'),True,preto)
+      tela.blit(textofinal, [280,100])
+      tela.blit(textofinal2, [180,200])
+      tela.blit(final, [240,500])
+      for event in pygame.event.get():
+          if event.type == pygame.QUIT:
+              pygame.quit()
+          if event.type == pygame.KEYDOWN:
+              if event.key == pygame.K_ESCAPE:
+                  pygame.quit()
+      pygame.display.update()
+
+pygame.quit()#CHAMA O OBJETO pygame.QUIT PARA FECHAR A TELA AO CLICAR NO X
+
+
+
+
+
+
+
